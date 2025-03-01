@@ -1,4 +1,8 @@
-#[tokio::main]
-async fn main() {
-    println!("Hello, async world!");
+use reqwest;
+use serde::Deserialize;
+use clap::Parser;
+use std::error::Error;
+
+fn main() {
+    println!("New method");
 }
