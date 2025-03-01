@@ -1,4 +1,4 @@
-fn main() {
-    println!("Hello, world!");
-    println!("Let's get into it!");
+#[tokio::main]
+async fn main() {
+    println!("Hello, async world!");
 }
