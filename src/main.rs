@@ -7,6 +7,7 @@ use std::env;
 use dotenv::dotenv;
 
 fn main() {
+    // Load .env file
     dotenv().ok();
     let api_key = env::var("API_KEY").expect("API_KEY not found in .env file");
 
@@ -14,29 +15,28 @@ fn main() {
 
     println!("-----------------------------------");
     println!("       Currency Converter");
-    println!("-----------------------------------");
-    println!(" ");
+    println!("-----------------------------------\n");
 
-    print!("Enter currency from: ");
-    io::stdout().flush().unwrap();
-    let mut currency_from = String::new();
-    io::stdin().read_line(&mut currency_from).expect("Failed to read line");
-    let currency_from = currency_from.trim();
+    // Function to get user input
+    fn get_input(prompt: &str) -> String {
+        print!("{}", prompt);
+        io::stdout().flush().unwrap();
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).expect("Failed to read input");
+        input.trim().to_string()
+    }
 
-    print!("Enter amount: ");
-    io::stdout().flush().unwrap();
-    let mut amount_input = String::new();
-    io::stdin().read_line(&mut amount_input).expect("Failed to read line");
-    let amount: f64 = amount_input.trim().parse().expect("Please enter a valid number");
+    let currency_from = get_input("Enter currency from (e.g., USD): ").to_uppercase();
+    let amount: f64 = loop {
+        let amount_str = get_input("Enter amount: ");
+        match amount_str.parse::<f64>() {
+            Ok(num) => break num,
+            Err(_) => println!("Invalid amount. Please enter a valid number."),
+        }
+    };
+    let currency_to = get_input("Enter currency to (e.g., EUR): ").to_uppercase();
 
-    print!("Enter currency to: ");
-    io::stdout().flush().unwrap();
-    let mut currency_to  = String::new();
-    io::stdin().read_line(&mut currency_to).expect("Failed to read line");
-    let currency_to = currency_to.trim();
+    println!("\nConverting {:.2} {} to {}", amount, currency_from, currency_to);
 
-    println!("\nConverting {} {} to {}",currency_from, amount, currency_to);
-
-    
+    // API request will be added here in the future
 }
-
