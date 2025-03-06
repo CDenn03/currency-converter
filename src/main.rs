@@ -1,12 +1,14 @@
 use reqwest;
 use serde::Deserialize;
 use clap::Parser;
+use serde_json::Value;
 use std::error::Error;
 use std::io::{self, Write}; 
 use std::env;
 use dotenv::dotenv;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     // Load .env file
     dotenv().ok();
     let api_key = env::var("API_KEY").expect("API_KEY not found in .env file");
@@ -37,6 +39,34 @@ fn main() {
     let currency_to = get_input("Enter currency to (e.g., EUR): ").to_uppercase();
 
     println!("\nConverting {:.2} {} to {}", amount, currency_from, currency_to);
+    println!("------------------------");
+    println!("------------------------");
+ 
+    match get_conversion_rates(&api_key, &currency_from, &currency_to).await {
+        Ok(rate) => println!("Conversion rate: {:.2}", rate * amount),
+        Err(_) => eprintln!("Error"),
+    }
+
+    
 
     // API request will be added here in the future
+}
+
+pub async fn get_conversion_rates(api_key: &str, from: &str, to: &str) -> Result<f64, Box<dyn Error>> {
+    let url = format!("https://v6.exchangerate-api.com/v6/{}/latest/{}", api_key, from);
+
+    let response = reqwest::get(&url).await?.json::<Value>().await?;
+
+    println!("{}", response);
+
+    if let Some(rates) = response["conversion_rates"].as_object() {
+        if let Some(rate) = rates.get(to).and_then(|v| v.as_f64()) {
+            return Ok(rate);
+        } else {
+            return Err(format!("Currency code '{}' not found in conversion rates.", to).into());
+        }
+    } else {
+        return Err("Invalid API response: Missing 'conversion_rates' field.".into());
+    }
+    
 }
