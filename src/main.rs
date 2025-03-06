@@ -55,7 +55,7 @@ async fn main() {
 pub async fn get_conversion_rates(api_key: &str, from: &str, to: &str) -> Result<f64, Box<dyn Error>> {
     let url = format!("https://v6.exchangerate-api.com/v6/{}/latest/{}", api_key, from);
 
-    let response = reqwest::get(&url).await?.json::<Value>().await?;
+    let response = reqwest::get(&url).await?.json::<Value>().await?;git 
 
     println!("{}", response);
 
