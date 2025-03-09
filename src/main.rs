@@ -43,7 +43,7 @@ async fn main() {
     println!("------------------------");
  
     match get_conversion_rates(&api_key, &currency_from, &currency_to).await {
-        Ok(rate) => println!("Conversion rate: {:.2}", rate * amount),
+        Ok(rate) => println!("{} {} is equivalent to {:.2} {}", amount, currency_from, rate * amount, currency_to ),
         Err(_) => eprintln!("Error"),
     }
 
