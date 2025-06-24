@@ -66,7 +66,7 @@ pub async fn get_conversion_rates(api_key: &str, from: &str, to: &str) -> Result
             return Err(format!("Currency code '{}' not found in conversion rates.", to).into());
         }
     } else {
-        return Err("Invalid API response: Missing 'conversion_rates' field.".into());
+        return Err("Invalid API response: Missing 'conversion_rates' field..".into());
     }
     
 }
